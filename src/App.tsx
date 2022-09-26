@@ -1,26 +1,63 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react"
+import TodoForm from "./components/TodoForm"
+import TodoList from "./components/TodoList"
+import { TodoItemInterFace } from "./Types/interface";
+import "./sass/style.scss"
+
+
 
 function App() {
+
+  const [todos, setTodos] = useState<TodoItemInterFace[]>([]);
+
+  const addTodo = (todoText: string) => {
+    setTodos([...todos,
+    {
+      id: Math.floor(Math.random() * 100) + 1,
+      text: todoText,
+      isComplete: false
+    }
+    ])
+  }
+
+  const removeTodo = (todoId: number) => {
+    setTodos(todos.filter(todo => todo.id !== todoId))
+  }
+
+  const editedTodo = (todoId: number, newText: string) => {
+    
+    
+    todos.forEach((todo) => {
+      if (todo.id === todoId) {
+        todo.text = newText
+      }
+      return todos;
+    })
+
+  }
+
+  const completedTodo = (todoId: number) => {
+    
+    
+    todos.forEach((todo) => {
+      if (todo.id === todoId) {
+        todo.isComplete = true
+      }
+      return todos
+    })
+
+
+
+  }
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <TodoForm addTodo={addTodo} />
+      <TodoList todos={todos} removeTodo={removeTodo} editedTodo={editedTodo} completedTodo={completedTodo} />
+    </>
+  )
 }
 
-export default App;
+export default App
